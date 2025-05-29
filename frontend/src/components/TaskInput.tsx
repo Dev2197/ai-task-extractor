@@ -3,6 +3,7 @@ import { Plus, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ParsedTask } from "../types/Task";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
 interface TaskInputProps {
   onAddTask: (task: ParsedTask) => void;
 }
@@ -20,7 +21,7 @@ export const TaskInput = ({ onAddTask }: TaskInputProps) => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3001/api/parse", {
+      const response = await fetch(`${API_BASE_URL}/api/parse`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -34,10 +35,14 @@ export const TaskInput = ({ onAddTask }: TaskInputProps) => {
         throw new Error(result.error || "Failed to parse task");
       }
 
-      // Convert the ISO date string to a Date object
+      // Convert the ISO date string to a Date object only if it's a valid ISO date
       const parsedTask = {
         ...result.data,
-        dueDate: result.data.dueDate ? new Date(result.data.dueDate) : null,
+        dueDate: result.data.dueDate
+          ? /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(result.data.dueDate)
+            ? new Date(result.data.dueDate)
+            : result.data.dueDate
+          : null,
       };
 
       onAddTask(parsedTask);

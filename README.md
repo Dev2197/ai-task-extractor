@@ -1,15 +1,6 @@
-# 🧠 Natural Language Task Manager
+# 🚀 Smart Task Manager AI
 
-A modern full-stack application that lets you create tasks using natural language. Simply type your task as you would say it, and the app intelligently parses it into structured data using OpenAI's API.
-
-## ✨ Features
-
-- 📝 Create tasks using natural language
-- 🤖 AI-powered parsing of task details
-- 📅 Automatic extraction of due dates
-- 👥 Assignee detection
-- ⭐ Priority level assignment
-- 📊 Tasks grouped by priority
+Transform your natural language inputs into structured tasks effortlessly. Powered by OpenAI, this application understands context, preserves time references, and automatically detects task details from both single inputs and meeting transcripts.
 
 ## 🚀 Prerequisites
 
@@ -63,35 +54,74 @@ A modern full-stack application that lets you create tasks using natural languag
    - Frontend: `http://localhost:8080`
    - Backend: `http://localhost:3001`
 
-## 📝 Example Usage
 
-Try entering tasks in natural language. Here are some examples:
+## ✨ Key Features
 
-1. **Task with specified priority (P1 - Urgent):**
+- **Smart Time Parsing**:
+  - Preserves day names (e.g., "Wednesday")
+  - Understands vague references (e.g., "tonight", "next week")
+  - Handles specific dates and times with timezone awareness
+- **Context-Aware Processing**:
+  - Automatically detects assignees
+  - Identifies task priorities (P1-P4)
+  - Extracts due dates and times
+- **Meeting Transcript Support**:
+  - Parse multiple tasks from meeting notes
+  - Maintains context for each task
+  - Preserves relationships between tasks and assignees
+- **Modern UI/UX**:
+  - Beautiful, responsive design
+  - Priority-based task organization
+  - Smooth scrolling to new tasks
+  - Easy task editing and deletion
 
-   > "P1: Submit security patch to Sarah by 5pm today"
+## 🎯 Example Usage
 
-   The app will parse this into:
+### Single Task Input
 
-   - Task: Submit security patch
-   - Assignee: Sarah
-   - Due Date: Today at 5:00 PM
-   - Priority: P1 (Urgent)
+```
+Input: "Aman needs to review the landing page design by tomorrow 6pm P1"
 
-2. **Task with default priority (P3 - Medium):**
+Result:
+- Title: Review the landing page design
+- Assignee: Aman
+- Due: Tomorrow at 6:00 PM
+- Priority: P1
+```
 
-   > "Review design mockups with Alex by next Monday"
+### Meeting Transcript
 
-   The app will parse this into:
+```
+Input:
+"Aman you take the landing page by 10pm tomorrow.
+Rajeev you take care of client follow-up by Wednesday.
+Shreya please review the marketing deck tonight."
 
-   - Task: Review design mockups
-   - Assignee: Alex
-   - Due Date: Next Monday
-   - Priority: P3 (Medium) - Default
+Results:
+1. Task: Take the landing page
+   - Assignee: Aman
+   - Due: Tomorrow at 10:00 PM
+   - Priority: P3
 
-You can specify priorities in your task description:
+2. Task: Client follow-up
+   - Assignee: Rajeev
+   - Due: Wednesday
+   - Priority: P3
 
-- P1: Urgent/Critical tasks
-- P2: High priority tasks
-- P3: Medium priority (default)
-- P4: Low priority tasks
+3. Task: Review the marketing deck
+   - Assignee: Shreya
+   - Due: Tonight
+   - Priority: P3
+```
+
+## 🛠️ Technical Stack
+
+- **Frontend**:
+
+  - React with TypeScript
+  - TailwindCSS for styling
+  - Responsive design
+
+- **Backend**:
+  - Node.js/Express
+  - OpenAI API integration

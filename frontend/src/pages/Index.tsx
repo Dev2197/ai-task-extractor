@@ -1,32 +1,54 @@
-
-import { useState } from 'react';
-import { TaskInput } from '../components/TaskInput';
-import { TaskList } from '../components/TaskList';
-import { EditTaskModal } from '../components/EditTaskModal';
-import { Task, ParsedTask } from '../types/Task';
-import { Sparkles } from 'lucide-react';
+import { useState, useRef, useEffect } from "react";
+import { TaskInput } from "../components/TaskInput";
+import { TaskList } from "../components/TaskList";
+import { EditTaskModal } from "../components/EditTaskModal";
+import { TranscriptParser } from "../components/TranscriptParser";
+import { Task } from "../types/Task";
+import { Sparkles } from "lucide-react";
 
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
+  const taskListRef = useRef<HTMLDivElement>(null);
+  const [shouldScroll, setShouldScroll] = useState(false);
 
-  const addTask = (parsedTask: ParsedTask) => {
-    const newTask: Task = {
-      id: Date.now().toString(),
-      ...parsedTask,
-      createdAt: new Date(),
-    };
-    setTasks(prev => [...prev, newTask]);
+  // Effect to handle scrolling after tasks are added
+  useEffect(() => {
+    if (shouldScroll && taskListRef.current) {
+      const timer = setTimeout(() => {
+        taskListRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+        setShouldScroll(false);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [shouldScroll, tasks]);
+
+  const addTask = (task: Task) => {
+    setTasks((prev) => [
+      ...prev,
+      { ...task, id: crypto.randomUUID(), createdAt: new Date() },
+    ]);
+    setShouldScroll(true);
+  };
+
+  const addTasks = (newTasks: Task[]) => {
+    setTasks((prev) => [...prev, ...newTasks]);
+    setShouldScroll(true);
   };
 
   const editTask = (updatedTask: Task) => {
-    setTasks(prev => prev.map(task => 
-      task.id === updatedTask.id ? updatedTask : task
-    ));
+    setTasks((prev) =>
+      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
+    );
+    setEditingTask(null);
   };
 
   const deleteTask = (taskId: string) => {
-    setTasks(prev => prev.filter(task => task.id !== taskId));
+    setTasks((prev) => prev.filter((task) => task.id !== taskId));
   };
 
   return (
@@ -39,20 +61,26 @@ const Index = () => {
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Natural Language Task Manager
+              Smart Task Manager AI
             </h1>
           </div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Transform your thoughts into organized tasks using natural language. 
-            Just describe what needs to be done and let AI handle the parsing.
+            Effortlessly create and manage tasks using natural language. Our AI
+            understands context, preserves time references, and automatically
+            detects assignees and priorities. Perfect for both quick task
+            entries and meeting transcript parsing.
           </p>
         </div>
+
+        {/* Transcript Parser */}
+        <TranscriptParser onTasksExtracted={addTasks} />
 
         {/* Task Input */}
         <TaskInput onAddTask={addTask} />
 
         {/* Task List */}
-        <TaskList 
+        <TaskList
+          ref={taskListRef}
           tasks={tasks}
           onEditTask={setEditingTask}
           onDeleteTask={deleteTask}

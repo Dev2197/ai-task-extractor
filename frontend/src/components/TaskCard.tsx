@@ -25,32 +25,40 @@ export const TaskCard = ({ task, onEdit, onDelete }: TaskCardProps) => {
     }
   };
 
-  const formatDueDate = (date: Date | null) => {
-    if (!date) return null;
+  const formatDueDate = (dueDate: Date | string | null) => {
+    if (!dueDate) return null;
 
-    const timeStr = format(date, "h:mm a"); // e.g., "11:00 PM"
+    // If dueDate is a string (e.g., "Wednesday" or "Tonight"), return it as is
+    if (typeof dueDate === "string") {
+      return dueDate;
+    }
 
-    if (isToday(date)) {
+    const timeStr = format(dueDate, "h:mm a"); // e.g., "11:00 PM"
+
+    if (isToday(dueDate)) {
       return `Today at ${timeStr}`;
     }
 
-    if (isTomorrow(date)) {
+    if (isTomorrow(dueDate)) {
       return `Tomorrow at ${timeStr}`;
     }
 
     // Check if the year matches current year
     const currentYear = new Date().getFullYear();
-    const isCurrentYear = date.getFullYear() === currentYear;
+    const isCurrentYear = dueDate.getFullYear() === currentYear;
 
     // Format: "11:00 PM, 20 June" or "11:00 PM, 20 June 2025"
     return `${timeStr}, ${format(
-      date,
+      dueDate,
       isCurrentYear ? "d MMMM" : "d MMMM yyyy"
     )}`;
   };
 
   const isOverdue =
-    task.dueDate && isPast(task.dueDate) && !isToday(task.dueDate);
+    task.dueDate &&
+    typeof task.dueDate === "object" &&
+    isPast(task.dueDate) &&
+    !isToday(task.dueDate);
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-gray-300 transition-all duration-200 group">
