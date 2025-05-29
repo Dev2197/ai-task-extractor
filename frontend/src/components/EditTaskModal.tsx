@@ -174,11 +174,6 @@ export const EditTaskModal = ({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Due Date & Time
             </label>
-            {typeof editedTask.dueDate === "string" && (
-              <div className="mb-2 text-sm text-gray-500">
-                Original text date: {editedTask.dueDate}
-              </div>
-            )}
             <input
               type="datetime-local"
               value={formatDateForInput(editedTask.dueDate)}
