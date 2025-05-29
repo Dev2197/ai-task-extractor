@@ -36,11 +36,11 @@ export const TaskCard = ({ task, onEdit, onDelete }: TaskCardProps) => {
     const timeStr = format(dueDate, "h:mm a"); // e.g., "11:00 PM"
 
     if (isToday(dueDate)) {
-      return `Today at ${timeStr}`;
+      return `${timeStr}, Today`;
     }
 
     if (isTomorrow(dueDate)) {
-      return `Tomorrow at ${timeStr}`;
+      return `${timeStr}, Tomorrow`;
     }
 
     // Check if the year matches current year
