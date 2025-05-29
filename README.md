@@ -13,7 +13,7 @@ Transform your natural language inputs into structured tasks effortlessly. Power
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Dev2197/ai-task-extractor.git
    ```
 
 2. **Run Backend & Frontend**
